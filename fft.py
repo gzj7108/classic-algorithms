@@ -21,7 +21,6 @@ class FFT_dit2():
                 l=int(l/2)
                 self.layer+=1
             self.layer-=1
-            #print("layer:",self.layer)
 
         else:
             print("please choose the right length")
@@ -33,16 +32,16 @@ class FFT_dit2():
         temp=[]
         for j in range(self.layer):
             temp.append(int(i%2))
-            #print(temp)
             i/=2
 
         temp.reverse()
+        
         i_reverse=0
         index=0
         for j in temp:
             i_reverse+=2**index*j
             index+=1   
-        #print("i reverse:",i_reverse)
+
         return i_reverse
     
     def recurse(self,s,l,layer):
@@ -52,43 +51,27 @@ class FFT_dit2():
         if l ==len(s) :
         
             s_next=self.recurse(s[:],l_next,layer-1)
-            #print("s_next:",s_next)
             for i in range(l_next):
-                #print("layer2:",layer)
                 w=math.cos(-2*pi*i/l)+math.sin(-2*pi*i/l)*1j
-                #print("w:",w,"l:",l)
                 s[i]=s_next[i]+s_next[i+2**(layer-1)]*w
-                s[i+2**(layer-1)]=s_next[i]-s_next[i+2**(layer-1)]*w 
-                
-            #print("i:",i,"\t",i+2**(layer-1))
+                s[i+2**(layer-1)]=s_next[i]-s_next[i+2**(layer-1)]*w               
 
         elif layer!=1:
             s_next=self.recurse(s[:],l_next,layer-1)
-            #print("s_next:",s_next)
-            for i in range(0,len(s),2**layer):
-                #print(s)
-                #w=math.cos(-2*pi*i/l)+math.sin(-2*pi*i/l)*1j
-                
+            for i in range(0,len(s),2**layer):               
                 for j in range(layer):  
-                    #print("layerhh:",layer)
                     w=math.cos(-2*pi*(i+j)/l)+math.sin(-2*pi*(i+j)/l)*1j
-                    #print("w:",w)
                     s[i+j]=s_next[i+j]+s_next[i+j+2**(layer-1)]*w
                     s[i+j+2**(layer-1)]=s_next[i+j]-s_next[i+j+2**(layer-1)]*w
-                   
-           
+
         else:
-            #print("s:",s)
             for i in range(0,len(s),2):
-                #print("i:",i)
-                #print("layer1:",layer)
                 w=1
-                #print("w:",w)
                 t1=s[i]
                 t2=s[i+1]
                 s[i]=t1+t2*w
                 s[i+1]=t1-t2*w
-            #print("s:",s)
+
         return s
 
     def reverse_signal(self,s):
@@ -97,22 +80,17 @@ class FFT_dit2():
         for i in range(len(s)):
             i_t=fft.reverse_bit(i)
             x[i]=s[i_t]
-        #print(x)
+
         return x
 
 
+
+#test
 fft=FFT_dit2()
 x=[1,2,-1,4]
 print("orginal signal:",x)
 fft.setlength(len(x))
 x=fft.reverse_signal(x)
-
 print("after fourier transform:",fft.recurse([1,-1,2,4],len(x),fft.layer))
-"""print("x:",x)
-fft.transform()
-
-for i in range(8):
-    print("input:",i,"\nreverse:",fft.reverse_bit(3,i))
-"""
 
                 
