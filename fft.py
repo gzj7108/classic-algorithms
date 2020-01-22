@@ -53,24 +53,29 @@ class FFT_dit2():
             s_next=self.recurse(s[:],l_next,layer-1)
             for i in range(l_next):
                 w=math.cos(-2*pi*i/l)+math.sin(-2*pi*i/l)*1j
-                s[i]=s_next[i]+s_next[i+2**(layer-1)]*w
-                s[i+2**(layer-1)]=s_next[i]-s_next[i+2**(layer-1)]*w               
+                #optimize the performance
+                t=s_next[i+2**(layer-1)]*w
+                s[i]=s_next[i]+t
+                s[i+2**(layer-1)]=s_next[i]-t        
 
         elif layer!=1:
             s_next=self.recurse(s[:],l_next,layer-1)
             for i in range(0,len(s),2**layer):               
                 for j in range(layer):  
                     w=math.cos(-2*pi*(i+j)/l)+math.sin(-2*pi*(i+j)/l)*1j
-                    s[i+j]=s_next[i+j]+s_next[i+j+2**(layer-1)]*w
-                    s[i+j+2**(layer-1)]=s_next[i+j]-s_next[i+j+2**(layer-1)]*w
+                    #optimize the performance
+                    t=s_next[i+j+2**(layer-1)]*w
+                    s[i+j]=s_next[i+j]+t
+                    s[i+j+2**(layer-1)]=s_next[i+j]-t
 
         else:
             for i in range(0,len(s),2):
                 w=1
                 t1=s[i]
-                t2=s[i+1]
-                s[i]=t1+t2*w
-                s[i+1]=t1-t2*w
+                #optimize the performance
+                t2=s[i+1]*w
+                s[i]=t1+t2
+                s[i+1]=t1-t2
 
         return s
 
@@ -91,6 +96,6 @@ x=[1,2,-1,4]
 print("orginal signal:",x)
 fft.setlength(len(x))
 x=fft.reverse_signal(x)
-print("after fourier transform:",fft.recurse([1,-1,2,4],len(x),fft.layer))
+print("after fourier transform:",fft.recurse(x,len(x),fft.layer))
 
                 
