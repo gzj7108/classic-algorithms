@@ -1,5 +1,5 @@
-# classic-algorithms
-1.pid
-a controller in autocontrol which contains the knowledge of the feedback
-2.fft
-fast fourier transform used to process the signal or the information
+# 经典算法classic-algorithms
+1.比例积分微分控制器(pid)
+用于自动控制，包含反馈的思想，和过去i,现在p，未来d有关，思想启发性大，调参是关键。
+2.快速傅里叶变换(fft)
+用于处理信号，或是从看似无序的信息中提取特征，应用广泛，已被封神。
